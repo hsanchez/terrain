@@ -39,6 +39,7 @@
 </div>
 
 <script src="js/classes/Three.js"></script>
+<script src="js/classes/PerlinNoise.js"></script>
 <script src="js/classes/Detector.js"></script>
 <script src="js/classes/RequestAnimationFrame.js"></script>
 <script src="js/classes/Stats.js"></script>
@@ -56,5 +57,31 @@
 
 <script src="js/classes/dat.gui.min.js"></script>
 <script src="js/Front.js"></script>
+
+<script>
+    var front = new Front(
+            window.innerWidth,
+            window.innerHeight,
+            256,
+            256
+    );
+
+    //front.start();
+
+    play();
+
+
+    function play() {
+
+        requestAnimationFrame( play );
+
+        front.render();
+        front.updateStats();
+
+    }
+
+
+
+</script>
 </body>
 </html>

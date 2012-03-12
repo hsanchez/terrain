@@ -13,7 +13,7 @@ PerlinNoise.prototype = {
 	/**
 	 * initialize the Perlin Noise algorithm.
 	 */
-	init: function(){
+	init: function() {
 		this.permutations = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,
 			69,142,8,99,37,240,21,10, 23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,
 			11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,
@@ -71,7 +71,7 @@ PerlinNoise.prototype = {
 	 * @param y coordinate on the plane.
 	 * @param z coordinate on the plane.
 	 */
-	noise : function (x, y, z) {
+	noise : function(x, y, z) {
 		var floorX = Math.floor(x);
 		var floorY = Math.floor(y);
 		var floorZ = Math.floor(z);
@@ -104,36 +104,35 @@ PerlinNoise.prototype = {
 
 
 		// add blended results from 8 corners of cube.
-		return this.lerp (
+		return this.lerp(
 			w,
-			this.lerp (
+			this.lerp(
 				v,
-				this.lerp (
+				this.lerp(
 					u,
-					this.grad (p[AA], x, y, z),
-					this.grad (p[BA], xMinusOne, y, z)
+					this.grad(p[AA], x, y, z),
+					this.grad(p[BA], xMinusOne, y, z)
 				),
-				this.lerp (
+				this.lerp(
 					u,
-					this.grad (p[AB], x, yMinusOne, z),
-					this.grad (p[BB], xMinusOne, yMinusOne, z)
+					this.grad(p[AB], x, yMinusOne, z),
+					this.grad(p[BB], xMinusOne, yMinusOne, z)
 				)
 			),
-			this.lerp (
+			this.lerp(
 				v,
-				this.lerp (
+				this.lerp(
 					u,
-					this.grad (p[AA + 1], x, y, zMinusOne),
-					this.grad (p[BA + 1], xMinusOne, y, z - 1)
+					this.grad(p[AA + 1], x, y, zMinusOne),
+					this.grad(p[BA + 1], xMinusOne, y, z - 1)
 				),
-				this.lerp (
+				this.lerp(
 					u,
-					this.grad (p[AB + 1], x, yMinusOne, zMinusOne),
-					this.grad (p[BB + 1], xMinusOne, yMinusOne, zMinusOne)
+					this.grad(p[AB + 1], x, yMinusOne, zMinusOne),
+					this.grad(p[BB + 1], xMinusOne, yMinusOne, zMinusOne)
 				)
 			)
 		);
-
 
 	}
 };
