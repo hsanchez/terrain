@@ -1,0 +1,60 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Dynamic Procedural Terrain (Cmps290B Project)</title>
+    <meta charset="utf-8">
+    <link href="css/style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div id="container"></div>
+<div id="info">
+    PGT using <a href="#" target="_blank">3d simplex noise</a>,
+    <a href="#" target="_blank">Diamond Square</a>, and a mix of both, <br/>
+    textures by <a href="http://opengameart.org/content/dark-grass">qubodup</a>.
+</div>
+
+<div id="loading">Loading...</div>
+
+<div id="footer">
+    <div class="c">
+        day / night: <span class="h">n</span>
+    </div>
+
+    <div class="c">
+        animate terrain: <span class="h">m</span>
+    </div>
+
+    <div class="c">
+        use 3D simplex noise: <span class="h">s</span>
+    </div>
+
+    <div class="c">
+        use Diamond square: <span class="h">d</span>
+    </div>
+
+    <div class="c">
+        use our algorithm: <span class="h">d</span>
+    </div>
+</div>
+
+<script src="js/classes/Three.js"></script>
+<script src="js/classes/Detector.js"></script>
+<script src="js/classes/RequestAnimationFrame.js"></script>
+<script src="js/classes/Stats.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="js/classes/jquery.mousewheel.min.js"></script>
+<script src="js/classes/ShaderTerrain.js"></script>
+<script src="js/classes/ShaderExtras.js"></script>
+
+<script src="js/classes/postprocessing/EffectComposer.js"></script>
+<script src="js/classes/postprocessing/RenderPass.js"></script>
+<script src="js/classes/postprocessing/BloomPass.js"></script>
+<script src="js/classes/postprocessing/ShaderPass.js"></script>
+<script src="js/classes/postprocessing/MaskPass.js"></script>
+<script src="js/classes/postprocessing/SavePass.js"></script>
+
+<script src="js/classes/dat.gui.min.js"></script>
+<script src="js/front.js"></script>
+</body>
+</html>

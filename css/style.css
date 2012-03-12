@@ -1,0 +1,22 @@
+body {
+    background: #000;
+    color: #999;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    font-family: georgia;
+    font-size:1em;
+    text-align: center;
+}
+
+#info { margin-top: 2em	}
+
+a { color: #fb0; }
+
+#footer { width: 100%; margin: 2em auto; text-align: center; position: absolute; bottom: 0 }
+.h { color: #fb0 }
+.c { display: inline; margin-left: 1em }
+
+#loading { width: 100%; margin: 2em auto; text-align: center; position: absolute; top: 25em  }
+
+#oldie a { color:#da0 }
