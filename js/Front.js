@@ -33,6 +33,7 @@ Front.prototype = {
 		this.animDeltaDir = -1;
 		this.lightVal = 0;
 		this.lightDir = 1;
+		this.updateNoise = true;
 
 
 
@@ -89,6 +90,13 @@ Front.prototype = {
 		this.pointLight.position.set( 0, 0, 0 );
 		this.scene.add( this.pointLight );
 
+		// HEIGHT MAPS
+		var rx = 256, ry = 256;
+		var pars = { minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat };
+
+		this.heightMap  = new THREE.WebGLRenderTarget( rx, ry, pars );
+		this.normalMap = new THREE.WebGLRenderTarget( rx, ry, pars );
+
 		// TEXTURES
 
 		this.data		= this.rise(this.worldWidth, this.worldDepth);
@@ -127,6 +135,75 @@ Front.prototype = {
 		// EVENTS
 		this._setupEvents();
 
+		// COMPOSER
+		this.renderer.autoClear = false;
+
+		this.renderTargetParameters = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBufer: false };
+		this.renderTarget = new THREE.WebGLRenderTarget( SCREEN_WIDTH, SCREEN_HEIGHT, this.renderTargetParameters );
+
+		this.effectBloom = new THREE.BloomPass( 0.6 );
+		var effectBleach = new THREE.ShaderPass( THREE.ShaderExtras[ "bleachbypass" ] );
+
+		this.hblur = new THREE.ShaderPass( THREE.ShaderExtras[ "horizontalTiltShift" ] );
+		this.vblur = new THREE.ShaderPass( THREE.ShaderExtras[ "verticalTiltShift" ] );
+
+		var bluriness = 6;
+
+		this.hblur.uniforms[ 'h' ].value = bluriness / SCREEN_WIDTH;
+		this.vblur.uniforms[ 'v' ].value = bluriness / SCREEN_HEIGHT;
+
+		this.hblur.uniforms[ 'r' ].value = this.vblur.uniforms[ 'r' ].value = 0.5;
+
+		effectBleach.uniforms[ 'opacity' ].value = 0.65;
+
+		this.composer = new THREE.EffectComposer( this.renderer, this.renderTarget );
+
+		var renderModel = new THREE.RenderPass( this.scene, this.camera );
+
+		this.vblur.renderToScreen = true;
+
+		this.composer = new THREE.EffectComposer( this.renderer, this.renderTarget );
+
+		this.composer.addPass( renderModel );
+
+		this.composer.addPass( this.effectBloom );
+
+		this.composer.addPass( this.hblur );
+		this.composer.addPass( this.vblur );
+
+		// MORPHS
+		var loader = new THREE.JSONLoader();
+		var startX = -3000;
+
+		// TODO... fix Cross origin requests are only supported for HTTP error
+		// when loading the models.
+//		loader.load( "models/Parrot.js", function( geometry ) {
+//
+//			Morphs.convertMorphColorsToFaceColors( geometry );
+//			Morphs.addMorph( geometry, 250, 500, startX -500, 500, 700 );
+//			Morphs.addMorph( geometry, 250, 500, startX - Math.random() * 500, 500, -200 );
+//			Morphs.addMorph( geometry, 250, 500, startX - Math.random() * 500, 500, 200 );
+//			Morphs.addMorph( geometry, 250, 500, startX - Math.random() * 500, 500, 1000 );
+//
+//		} );
+
+//		loader.load( "models/Flamingo.js", function( geometry ) {
+//
+//			Morphs.convertMorphColorsToFaceColors( geometry );
+//			Morphs.addMorph( geometry, 500, 1000, startX - Math.random() * 500, 350, 40 );
+//
+//		} );
+//
+//		loader.load( "models/Stork.js", function( geometry ) {
+//
+//			Morphs.convertMorphColorsToFaceColors( geometry );
+//			Morphs.addMorph( geometry, 350, 1000, startX - Math.random() * 500, 350, 340 );
+//
+//		} );
+
+		// PRE-INIT
+
+		this.renderer.initWebGLObjects( this.scene );
 
 	},
 
@@ -183,16 +260,10 @@ Front.prototype = {
 	},
 
 	_newController: function(camera) {
-		var controls = new THREE.TrackballControls( camera );
-		controls.target.set( 0, 0, 0 );
-		controls.rotateSpeed = 1.0;
-		controls.zoomSpeed = 1.2;
-		controls.panSpeed = 0.8;
-		controls.noZoom = false;
-		controls.noPan = false;
-		controls.staticMoving = false;
-		controls.dynamicDampingFactor = 0.15;
-		controls.keys = [ 65, 83, 68 ];
+		var controls = new THREE.FirstPersonControls( camera );
+		controls.movementSpeed = 1000;
+		controls.lookSpeed = 0.1;
+
 		return controls;
 	},
 
@@ -244,7 +315,7 @@ Front.prototype = {
 	 * @param height world's height
 	 */
 	skin: function(data, width, height) {
-		return new Texture(data, width, height, document).generate();
+		return new Textures(data, width, height, document).generate();
 	},
 
 	start: function() {
@@ -266,8 +337,19 @@ Front.prototype = {
 	 * It renders the world ...
 	 */
 	render: function() {
-		this.controls.update( this.clock.getDelta() );
-		this.renderer.render(this.scene, this.camera);
+		var delta = this.clock.getDelta();
+		this.controls.update(delta);
+		var fLow = 0.4, fHigh = 0.825;
+		this.lightVal = THREE.Math.clamp( this.lightVal + 0.5 * delta * this.lightDir, fLow, fHigh );
+		var valNorm = ( this.lightVal - fLow ) / ( fHigh - fLow );
+		var sat = THREE.Math.mapLinear( valNorm, 0, 1, 0.95, 0.25 );
+		this.scene.fog.color.setHSV( 0.1, sat, this.lightVal );
+		this.renderer.setClearColor( this.scene.fog.color, 1 );
+		this.spotLight.intensity = THREE.Math.mapLinear( valNorm, 0, 1, 0.1, 1.15 );
+		this.pointLight.intensity = THREE.Math.mapLinear( valNorm, 0, 1, 0.9, 1.5 );
+		this.renderer.render( this.sceneRenderTarget, this.cameraOrtho, this.heightMap, true );
+		this.renderer.render( this.sceneRenderTarget, this.cameraOrtho, this.normalMap, true );
+		this.composer.render( 0.1 );
 	}
 };
 

@@ -5,11 +5,11 @@
  * @author Huascar A. Sanchez
  */
 
-Texture = function(data, width, height, document) {
+Textures = function(data, width, height, document) {
 	this.init(data, width, height, document);
 };
 
-Texture.prototype = {
+Textures.prototype = {
 	init: function(data, width, height) {
 		this.data  	= data;
 		this.width 	= width;
