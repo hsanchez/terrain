@@ -41,12 +41,15 @@ Front.prototype = {
 		this.controls 	= new THREE.FirstPersonControls( this.camera );
 		this.data		= this.rise(this.worldWidth, this.worldDepth);
 
-		this.camera.position.y = this.data[ this.worldHalfWidth + this.worldHalfDepth * this.worldWidth ] * 10 + 500;
+		this.camera.position.y = this.data[this.worldHalfWidth][this.worldHalfDepth] * 10 + 500;
 
-		var geometry = new THREE.PlaneGeometry( 7500, 7500, this.worldWidth - 1, this.worldDepth - 1 );
-
-		for ( var idx = 0, length = geometry.vertices.length; idx < length; idx ++ ) {
-			geometry.vertices[ idx ].position.z = this.data[ idx ] * 10;
+		var geometry = new THREE.PlaneGeometry( 7500, 7500, this.worldWidth - 1, this.worldDepth - 1);
+		var idx = 0;
+		for(var i = 0; i < this.worldWidth; i++) {
+			for(var j = 0; j < this.worldDepth; j++){
+				geometry.vertices[ idx ].position.z = this.data[i][j] * 10;
+				idx++;
+			}
 		}
 
 		// this.texture = new THREE.Texture(
@@ -80,7 +83,7 @@ Front.prototype = {
 	 * @param worldWidth world's width
 	 * @param worldDepth world's height
 	 */
-	rise: perlinNoise,
+	rise: diamondSquare,
 
 	/**
 	 * It generates a texture for the world.
@@ -97,7 +100,6 @@ Front.prototype = {
 		var canvas 	= document.createElement( 'canvas' );
 		canvas.width = width;
 		canvas.height = height;
-
 
 		var context = canvas.getContext( '2d' );
 		context.fillStyle = '#000';
