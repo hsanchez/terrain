@@ -285,7 +285,7 @@ Front.prototype = {
 	 * @param worldWidth world's width
 	 * @param worldDepth world's height
 	 */
-	rise: diamondSquare,
+	rise: perlinDiamond,
 
 	/**
 	 * It generates a texture for the world.

@@ -3,8 +3,8 @@
  * @author Zhongpeng Lin
  */
 
+
 function　perlinNoise(worldWidth, worldDepth){
-	var size 	= worldWidth * worldDepth;
 	var data 	= new Array();
 	var perlin 	= new PerlinNoise();
 	var quality = 1;
@@ -28,10 +28,39 @@ function　perlinNoise(worldWidth, worldDepth){
 		quality *= 5;
 	}
 	return data;
-};
+}
 
 function diamondSquare(width, depth) {
 	var ds = new DiamondSquare(width > depth ? width : depth, 200);
 	var data = ds.start(); 
 	return data;
+}
+
+function multiDiamondSquare(width, depth) {
+	var NUM = 4;
+	var ds = new DiamondSquare(width > depth ? width : depth, 800);
+	var terrains = new Array();
+	for(var i = 0; i < NUM; i++) {
+		terrains[i] = ds.start();
+	}
+	for(var i = 0; i < width; i++) {
+		for(var j = 0; j < depth; j++) {
+			for(k = 1; k < NUM; k++) {
+				terrains[0][i][j] += terrains[k][i][j];
+			}
+		}
+	}
+	return terrains[0];
+}
+
+function perlinDiamond(width, depth) {
+	var terrain = perlinNoise(width, depth);
+	var ds = new DiamondSquare(width > depth ? width : depth, 200);
+	var data = ds.start();
+	for(var i = 0; i < width; i++) {
+		for(var j = 0; j < depth; j++) {
+			terrain[i][j] += data[i][j];
+		}
+	}
+	return terrain;
 }
