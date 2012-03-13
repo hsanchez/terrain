@@ -3,7 +3,7 @@
  * A typical usage is
  * 	new Front(100, 100, 10).start();
  *
- * Author(s): huascarsanchez
+ * Author(s): Huascar A. Sanchez
  * Date: 3/11/12 - 10:52 PM
  */
 var Front = function(worldWidth, worldDepth) {
@@ -22,11 +22,18 @@ Front.prototype = {
 	 * @param worldDepth
 	 */
 	init: function(width, height, worldWidth, worldDepth){
-		self = this;
 		if(!Detector.webgl){
 			Detector.addGetWebGLMessage();
 			document.getElementById( 'container' ).innerHTML = "";
 		}
+
+		this.width 	= width;
+		this.height = height;
+		this.animDelta = 0;
+		this.animDeltaDir = -1;
+		this.lightVal = 0;
+		this.lightDir = 1;
+
 
 
 		this.loading 		= document.getElementById('loading');
@@ -39,15 +46,52 @@ Front.prototype = {
 		this.worldHalfDepth = worldDepth / 2;
 
 		this.container 	= document.getElementById( 'container' );
+
+		// SCENE (RENDER TARGET)
+		this.sceneRenderTarget = new THREE.Scene();
+		this.cameraOrtho = new THREE.OrthographicCamera(
+			this.width / - 2,
+			this.width / 2,
+			this.width / 2,
+			this.width / - 2,
+			-10000,
+			10000
+		);
+		this.cameraOrtho.position.z = 100;
+		this.sceneRenderTarget.add( this.cameraOrtho );
+
 		this.scene 		= new THREE.Scene();
-		this.scene.fog 	= new THREE.FogExp2( 0xefd1b5, 0.00025 );
+		this.scene.fog 	= new THREE.Fog( 0x050505, 2000, 4000 );
+		this.scene.fog.color.setHSV( 0.102, 0.9, 0.825 );
 
-		this.camera 	= new THREE.PerspectiveCamera( 60, width / height, 1, 10000 );
+
+		this.camera 	= new THREE.PerspectiveCamera(
+			40,
+			this.width / this.height,
+			2,
+			4000
+		);
+
 		this.scene.add( this.camera );
+		this.camera.position.set( -1200, 800, 1200 );
 
-		this.controls 	= new THREE.FirstPersonControls( this.camera );
+		// CONTROLLER Setup
+		this.controls 	= this._newController(this.camera);
+
+		// LIGHTS
+		this.scene.add( new THREE.AmbientLight( 0x111111 ) );
+		this.spotLight = new THREE.SpotLight( 0xffffff, 1.15 );
+		this.spotLight.position.set( 500, 2000, 0 );
+		this.spotLight.castShadow = true;
+		this.scene.add( this.spotLight );
+
+		this.pointLight = new THREE.PointLight( 0xff4400, 1.5 );
+		this.pointLight.position.set( 0, 0, 0 );
+		this.scene.add( this.pointLight );
+
+		// TEXTURES
+
 		this.data		= this.rise(this.worldWidth, this.worldDepth);
-
 		this.camera.position.y = this.data[ this.worldHalfWidth + this.worldHalfDepth * this.worldWidth ] * 10 + 500;
 
 		var geometry = new THREE.PlaneGeometry( 7500, 7500, this.worldWidth - 1, this.worldDepth - 1 );
@@ -69,15 +113,95 @@ Front.prototype = {
 		this.mesh.rotation.x = - 90 * Math.PI / 180;
 		this.scene.add( this.mesh );
 
-		this.renderer = new THREE.WebGLRenderer( { clearColor: 0xefd1b5, clearAlpha: 1 } );
-		this.renderer.setSize( width, height);
+		// RENDERER
+
+		this.renderer = this._newRenderer(this.width, this.height);
+
 		this.container.innerHTML = "";
 		this.container.appendChild( this.renderer.domElement );
 
-		this.stats = new Stats();
-		this.stats.getDomElement().style.position = 'absolute';
-		this.stats.getDomElement().style.top = '0px';
-		this.container.appendChild( this.stats.getDomElement() );
+		// STATS
+
+		this.stats = this._newStats(this.container);
+
+		// EVENTS
+		this._setupEvents();
+
+
+	},
+
+	_setupEvents: function() {
+		var self = this;
+		var onWindowResized = function(event) {
+			self.adjustSize( window.innerWidth, window.innerHeight - 2 * MARGIN);
+		};
+
+		var onKeyDown = function(event) {
+			switch( event.keyCode ) {
+
+				case 78: /*N*/  self.incrementLightDirection(); break;
+				case 77: /*M*/  self.incrementAnimationDeltaDirection(); break;
+				case 66: /*B*/  break;
+
+			}
+		};
+
+		onWindowResized();
+		window.addEventListener( 'resize', onWindowResized, false );
+		document.addEventListener( 'keydown', onKeyDown, false );
+	},
+
+	incrementLightDirection: function() {
+		this.lightDir *= -1;
+	},
+
+	incrementAnimationDeltaDirection: function() {
+		this.animDeltaDir *= -1;
+	},
+
+	_newStats: function(container) {
+		var stats = new Stats();
+		stats.getDomElement().style.position = 'absolute';
+		stats.getDomElement().style.top = '0px';
+		container.appendChild( stats.getDomElement() );
+
+		stats.getDomElement().children[ 0 ].children[ 0 ].style.color = "#aaa";
+		stats.getDomElement().children[ 0 ].style.background = "transparent";
+		stats.getDomElement().children[ 0 ].children[ 1 ].style.display = "none";
+
+		return stats;
+	},
+
+	_newRenderer: function(width, height) {
+		var renderer = new THREE.WebGLRenderer( { clearColor: 0xefd1b5, clearAlpha: 1 } );
+		renderer.setSize( width, height);
+		renderer.setClearColor( this.scene.fog.color, 1 );
+		renderer.domElement.style.position = "absolute";
+		renderer.domElement.style.top = MARGIN + "px";
+		renderer.domElement.style.left = "0px";
+		return renderer;
+	},
+
+	_newController: function(camera) {
+		var controls = new THREE.TrackballControls( camera );
+		controls.target.set( 0, 0, 0 );
+		controls.rotateSpeed = 1.0;
+		controls.zoomSpeed = 1.2;
+		controls.panSpeed = 0.8;
+		controls.noZoom = false;
+		controls.noPan = false;
+		controls.staticMoving = false;
+		controls.dynamicDampingFactor = 0.15;
+		controls.keys = [ 65, 83, 68 ];
+		return controls;
+	},
+
+	adjustSize: function(newWidth, newHeight) {
+		this.width = newWidth;
+		this.height = newHeight;
+		this.renderer.setSize( this.width, this.height );
+		this.camera.aspect = this.width / this.height;
+		this.camera.updateProjectionMatrix();
 	},
 
 	/**
@@ -103,7 +227,7 @@ Front.prototype = {
 			for ( i = 0; i < size; i ++ ) {
 				var x = i % worldWidth;
 				var y = Math.floor( i / worldWidth );
-				data[ i ] += Math.abs(perlin.noise(x / quality, y / quality, z, worldWidth) * quality * 1.75);//Math.abs( perlin.noise( x / quality, y / quality, z ) * quality * 1.75 );
+				data[ i ] += Math.abs(perlin.noise(x / quality, y / quality, z, worldWidth) * quality * 1.75);
 			}
 
 			quality *= 5;
@@ -120,66 +244,7 @@ Front.prototype = {
 	 * @param height world's height
 	 */
 	skin: function(data, width, height) {
-		var sun 	= new THREE.Vector3( 1, 1, 1 );
-		sun.normalize();
-
-		var vector3 = new THREE.Vector3( 0, 0, 0 );
-
-		var canvas 	= document.createElement( 'canvas' );
-		canvas.width = width;
-		canvas.height = height;
-
-
-		var context = canvas.getContext( '2d' );
-		context.fillStyle = '#000';
-		context.fillRect( 0, 0, width, height );
-
-		var image = context.getImageData( 0, 0, canvas.width, canvas.height );
-		var imageData = image.data;
-
-		var shade;
-		var i;
-		var j;
-		var l;
-
-		for ( i = 0, j = 0, l = imageData.length; i < l; i += 4, j ++ ) {
-			vector3.x = data[ j - 2 ] - data[ j + 2 ];
-			vector3.y = 2;
-			vector3.z = data[ j - width * 2 ] - data[ j + width * 2 ];
-			vector3.normalize();
-			shade = vector3.dot( sun );
-
-			var offset = 0.007;
-
-			imageData[ i ] = ( 96 + shade * 128 ) * ( 0.5 + data[ j ] * offset );
-			imageData[ i + 1 ] = ( 32 + shade * 96 ) * ( 0.5 + data[ j ] * offset );
-			imageData[ i + 2 ] = ( shade * 96 ) * ( 0.5 + data[ j ] * offset );
-		}
-
-		context.putImageData( image, 0, 0 );
-
-		var canvasScaled;
-
-		// Scaled 4x
-		canvasScaled = document.createElement( 'canvas' );
-		canvasScaled.width 	= width	 * 4;
-		canvasScaled.height = height * 4;
-
-		context = canvasScaled.getContext( '2d' );
-		context.scale( 4, 4 );
-		context.drawImage( canvas, 0, 0 );
-		image 	  = context.getImageData( 0, 0, canvasScaled.width, canvasScaled.height );
-		imageData = image.data;
-
-		for ( i = 0, l = imageData.length; i < l; i += 4 ) {
-			var v = Math.floor( Math.random() * 5 );
-			imageData[ i ] += v;
-			imageData[ i + 1 ] += v;
-			imageData[ i + 2 ] += v;
-		}
-
-		context.putImageData( image, 0, 0 );
-		return canvasScaled;
+		return new Texture(data, width, height, document).generate();
 	},
 
 	start: function() {
@@ -206,8 +271,11 @@ Front.prototype = {
 	}
 };
 
-MARGIN 		  = 100;
-SCREEN_WIDTH  = window.innerWidth;
-SCREEN_HEIGHT = window.innerHeight - 2 * MARGIN;
-WORLD_WIDTH   = 256;
-WORLD_DEPTH   = 256;
+
+
+
+MARGIN 		  	= 100;
+SCREEN_WIDTH  	= window.innerWidth;
+SCREEN_HEIGHT 	= window.innerHeight - 2 * MARGIN;
+WORLD_WIDTH   	= 256;
+WORLD_DEPTH   	= 256;
