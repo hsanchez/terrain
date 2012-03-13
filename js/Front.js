@@ -265,7 +265,7 @@ Front.prototype = {
 
 	_newController: function(camera) {
 		var controls = new THREE.FirstPersonControls( camera );
-		controls.movementSpeed = 1000;
+		controls.movementSpeed = 10;
 		controls.lookSpeed = 0.1;
 
 		return controls;
@@ -285,7 +285,7 @@ Front.prototype = {
 	 * @param worldWidth world's width
 	 * @param worldDepth world's height
 	 */
-	rise: perlinDiamond,
+	rise: HeightMap.perlinDiamond,
 
 	/**
 	 * It generates a texture for the world.
