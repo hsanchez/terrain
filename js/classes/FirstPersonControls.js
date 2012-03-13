@@ -93,8 +93,8 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 
 			switch ( event.button ) {
 
-				case 0: this.moveForward = false; break;
-				case 2: this.moveBackward = false; break;
+				case 0: this.moveForward = false; this.mouseX = 0;break;
+				case 2: this.moveBackward = false; this.mouseY = 0; break;
 
 			}
 
@@ -205,7 +205,7 @@ THREE.FirstPersonControls = function ( object, domElement ) {
 			if ( this.moveUp ) this.object.translateY( actualMoveSpeed );
 			if ( this.moveDown ) this.object.translateY( - actualMoveSpeed );
 
-			var actualLookSpeed = delta * this.lookSpeed;
+			var actualLookSpeed = delta * this.lookSpeed;// + moveOffset;
 
 			if ( !this.activeLook ) {
 
