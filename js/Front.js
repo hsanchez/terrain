@@ -34,7 +34,7 @@ Front.prototype = {
 
 		this.container 	= document.getElementById( 'container' );
 		this.scene 		= new THREE.Scene();
-		this.scene.fog 	= new THREE.FogExp2( 0xefd1b5, 0.0025 );
+		// this.scene.fog 	= new THREE.FogExp2( 0xefd1b5, 0.0025 );
 		this.camera 	= new THREE.PerspectiveCamera( 60, width / height, 1, 10000 );
 		this.scene.add( this.camera );
 
@@ -49,16 +49,17 @@ Front.prototype = {
 			geometry.vertices[ idx ].position.z = this.data[ idx ] * 10;
 		}
 
-		this.texture = new THREE.Texture(
-			this.skin( this.data, this.worldWidth, this.worldDepth ),
-			new THREE.UVMapping(),
-			THREE.ClampToEdgeWrapping,
-			THREE.ClampToEdgeWrappin
-		);
+		// this.texture = new THREE.Texture(
+			// this.skin( this.data, this.worldWidth, this.worldDepth ),
+			// new THREE.UVMapping(),
+			// THREE.ClampToEdgeWrapping,
+			// THREE.ClampToEdgeWrapping
+		// );
+// 
+		// this.texture.needsUpdate = true;
 
-		this.texture.needsUpdate = true;
-
-		this.mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { map: this.texture }));
+		this.mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({
+				map: THREE.ImageUtils.loadTexture('textures/grass.jpg')}));
 		this.mesh.rotation.x = - 90 * Math.PI / 180;
 		this.scene.add( this.mesh );
 
@@ -79,31 +80,7 @@ Front.prototype = {
 	 * @param worldWidth world's width
 	 * @param worldDepth world's height
 	 */
-	rise: function(worldWidth, worldDepth) {
-		var size 	= worldWidth * worldDepth;
-		var data 	= new Float32Array( size );
-		var perlin 	= new PerlinNoise();
-		var quality = 1;
-		var z 		= Math.random() * 100;
-
-		var i;
-		var j;
-		for ( i = 0; i < size; i ++ ) {
-			data[ i ] = 0
-		}
-
-		for ( j = 0; j < 4; j ++ ) {
-			for ( i = 0; i < size; i ++ ) {
-				var x = i % worldWidth, y = Math.floor( i / worldWidth );
-				data[ i ] += Math.abs( perlin.noise( x / quality, y / quality, z ) * quality * 1.75 );
-			}
-
-			quality *= 5;
-
-		}
-
-		return data;
-	},
+	rise: perlinNoise,
 
 	/**
 	 * It generates a texture for the world.
