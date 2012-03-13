@@ -6,8 +6,10 @@
  * Author(s): huascarsanchez
  * Date: 3/11/12 - 10:52 PM
  */
-var Front = function(width, height, worldWidth, worldDepth) {
-	this.init(width, height, worldWidth, worldDepth);
+var Front = function(worldWidth, worldDepth) {
+	var ww = (worldWidth === undefined) ? WORLD_WIDTH : worldWidth;
+	var wd = (worldDepth === undefined) ? WORLD_DEPTH : worldDepth;
+	this.init(SCREEN_WIDTH, SCREEN_HEIGHT, ww, wd);
 };
 
 Front.prototype = {
@@ -26,6 +28,10 @@ Front.prototype = {
 			document.getElementById( 'container' ).innerHTML = "";
 		}
 
+
+		this.loading 		= document.getElementById('loading');
+		this.loading.hidden = true;
+
 		this.clock 			= new THREE.Clock();
 		this.worldWidth 	= worldWidth;
 		this.worldDepth 	= worldDepth;
@@ -34,7 +40,8 @@ Front.prototype = {
 
 		this.container 	= document.getElementById( 'container' );
 		this.scene 		= new THREE.Scene();
-		this.scene.fog 	= new THREE.FogExp2( 0xefd1b5, 0.0025 );
+		this.scene.fog 	= new THREE.FogExp2( 0xefd1b5, 0.00025 );
+
 		this.camera 	= new THREE.PerspectiveCamera( 60, width / height, 1, 10000 );
 		this.scene.add( this.camera );
 
@@ -94,8 +101,9 @@ Front.prototype = {
 
 		for ( j = 0; j < 4; j ++ ) {
 			for ( i = 0; i < size; i ++ ) {
-				var x = i % worldWidth, y = Math.floor( i / worldWidth );
-				data[ i ] += Math.abs( perlin.noise( x / quality, y / quality, z ) * quality * 1.75 );
+				var x = i % worldWidth;
+				var y = Math.floor( i / worldWidth );
+				data[ i ] += Math.abs(perlin.noise(x / quality, y / quality, z, worldWidth) * quality * 1.75);//Math.abs( perlin.noise( x / quality, y / quality, z ) * quality * 1.75 );
 			}
 
 			quality *= 5;
@@ -197,3 +205,9 @@ Front.prototype = {
 		this.renderer.render(this.scene, this.camera);
 	}
 };
+
+MARGIN 		  = 100;
+SCREEN_WIDTH  = window.innerWidth;
+SCREEN_HEIGHT = window.innerHeight - 2 * MARGIN;
+WORLD_WIDTH   = 256;
+WORLD_DEPTH   = 256;
