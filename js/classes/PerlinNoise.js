@@ -134,5 +134,27 @@ PerlinNoise.prototype = {
 			)
 		);
 
+	},
+
+	marble: function(x, y, z, w) {
+		return 0.1 * this.stripes(x + 2 * this.turbulence(x, y, z, 1, w), 1.6);
+	},
+
+	crinkled: function(x, y, z, w) {
+		return 5 * this.turbulence(x, y, z, 1, w) * this.marble(x, y, z, w);
+	},
+
+	stripes: function(x, f) {
+		var t = 0.5 + 0.5 * Math.sin(f * 2 * Math.PI * x);
+		return t * t - 0.5;
+	},
+
+	turbulence: function(x, y, z, f, w/*w image width in pixels*/) {
+		var t = - 0.5;
+		for(; f <= w/12; f *= 2) {
+			t += Math.abs(this.noise(x, y, z) / f);
+		}
+
+		return t;
 	}
 };
