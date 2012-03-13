@@ -100,24 +100,28 @@ Front.prototype = {
 		// TEXTURES
 
 		this.data		= this.rise(this.worldWidth, this.worldDepth);
-		this.camera.position.y = this.data[ this.worldHalfWidth + this.worldHalfDepth * this.worldWidth ] * 10 + 500;
+		this.camera.position.y = this.data[this.worldHalfWidth][this.worldHalfDepth] * 10 + 500;
 
-		var geometry = new THREE.PlaneGeometry( 7500, 7500, this.worldWidth - 1, this.worldDepth - 1 );
-
-		for ( var idx = 0, length = geometry.vertices.length; idx < length; idx ++ ) {
-			geometry.vertices[ idx ].position.z = this.data[ idx ] * 10;
+		var geometry = new THREE.PlaneGeometry( 7500, 7500, this.worldWidth - 1, this.worldDepth - 1);
+		var idx = 0;
+		for(var i = 0; i < this.worldWidth; i++) {
+			for(var j = 0; j < this.worldDepth; j++){
+				geometry.vertices[ idx ].position.z = this.data[i][j] * 10;
+				idx++;
+			}
 		}
 
-		this.texture = new THREE.Texture(
-			this.skin( this.data, this.worldWidth, this.worldDepth ),
-			new THREE.UVMapping(),
-			THREE.ClampToEdgeWrapping,
-			THREE.ClampToEdgeWrappin
-		);
+		// this.texture = new THREE.Texture(
+			// this.skin( this.data, this.worldWidth, this.worldDepth ),
+			// new THREE.UVMapping(),
+			// THREE.ClampToEdgeWrapping,
+			// THREE.ClampToEdgeWrapping
+		// );
+// 
+		// this.texture.needsUpdate = true;
 
-		this.texture.needsUpdate = true;
-
-		this.mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial( { map: this.texture }));
+		this.mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({
+				map: THREE.ImageUtils.loadTexture('textures/grass.jpg')}));
 		this.mesh.rotation.x = - 90 * Math.PI / 180;
 		this.scene.add( this.mesh );
 
@@ -281,32 +285,7 @@ Front.prototype = {
 	 * @param worldWidth world's width
 	 * @param worldDepth world's height
 	 */
-	rise: function(worldWidth, worldDepth) {
-		var size 	= worldWidth * worldDepth;
-		var data 	= new Float32Array( size );
-		var perlin 	= new PerlinNoise();
-		var quality = 1;
-		var z 		= Math.random() * 100;
-
-		var i;
-		var j;
-		for ( i = 0; i < size; i ++ ) {
-			data[ i ] = 0
-		}
-
-		for ( j = 0; j < 4; j ++ ) {
-			for ( i = 0; i < size; i ++ ) {
-				var x = i % worldWidth;
-				var y = Math.floor( i / worldWidth );
-				data[ i ] += Math.abs(perlin.noise(x / quality, y / quality, z, worldWidth) * quality * 1.75);
-			}
-
-			quality *= 5;
-
-		}
-
-		return data;
-	},
+	rise: perlinDiamond,
 
 	/**
 	 * It generates a texture for the world.
