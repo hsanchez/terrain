@@ -6,11 +6,10 @@
  * Author(s): huascarsanchez
  * Date: 3/11/12 - 10:52 PM
  */
-Front = function(width, height, worldWidth, worldDepth) {
+var Front = function(width, height, worldWidth, worldDepth) {
 	this.init(width, height, worldWidth, worldDepth);
 };
 
-var self = null;
 Front.prototype = {
 
 	/**
@@ -179,12 +178,11 @@ Front.prototype = {
 		this.animate();
 	},
 
-	// TODO (whoever) fix this damn function... it recurses forever until
-	// getting stack overflow...
 	animate: function() {
-		requestAnimationFrame(self.animate());
-		self.render();
-		self.updateStats();
+		var self = this;
+		requestAnimationFrame(function(){self.animate();});
+		this.render();
+		this.updateStats();
 	},
 
 	updateStats: function() {
