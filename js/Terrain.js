@@ -286,12 +286,11 @@ Terrain.prototype = {
 	 * @param worldDepth world's height
 	 */
 	rise: function(worldWidth, worldDepth) {
-		switch(Math.floor(Math.random() * 5)){
+		switch(Math.floor(Math.random() * 4)){
 			case 0: return Algorithms.perlinNoise(worldWidth, worldDepth);
 			case 1: return Algorithms.diamondSquare(worldWidth, worldDepth);
-			case 2: return Algorithms.multiDiamondSquare(worldWidth, worldDepth);
-			case 3: return Algorithms.perlinDiamond(worldWidth, worldDepth);
-			case 4: return Algorithms.simplex(worldWidth, worldDepth);
+			case 2: return Algorithms.perlinDiamond(worldWidth, worldDepth);
+			case 3: return Algorithms.simplex(worldWidth, worldDepth);
 		}
 	},
 
