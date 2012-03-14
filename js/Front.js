@@ -267,6 +267,7 @@ Front.prototype = {
 
 	_newController: function(camera) {
 		var controls = new THREE.FirstPersonNavigationControls( camera );
+		controls.firstPersonControls.movementSpeed = 500;
 		return controls;
 	},
 
