@@ -29,6 +29,32 @@ HeightMap = {
 		}
 		return data;
 	},
+	
+	simplex: function(width, depth) {
+		var data 	= new Array();
+		var simplex = new SimplexNoise();
+		var quality = 1;
+		var z 		= Math.random() * 100;
+
+		var i;
+		var j;
+		for ( i = 0; i < worldWidth; i ++ ) {
+			data[ i ] = new Float32Array( worldDepth);
+			for( j = 0; j <worldDepth; j ++) {
+				data[i][j] = 0;
+			}
+		}
+
+		for ( j = 0; j < 4; j ++ ) {
+			for(var x = 0; x < worldWidth; x++){
+				for(var y = 0; y < worldDepth; y++){
+					data[x][y] += Math.abs( simplex.noise3d( x / quality, y / quality, z ) * quality * 1.75 );
+				}
+			}
+			quality *= 5;
+		}
+		return data;
+	},
 
 	diamondSquare: function(width, depth) {
 		var ds = new DiamondSquare(width > depth ? width : depth, 200);

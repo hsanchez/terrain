@@ -2,17 +2,19 @@
         "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Dynamic Procedural Terrain (Cmps290B Project)</title>
+    <title>Procedural Terrain Generation (Cmps290B Project)</title>
     <meta charset="utf-8">
     <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div id="container"></div>
 <div id="info">
-    Procedurally Generated Terrain via <a href="#" target="_blank">3D Perlin Noise</a>,
+    Terrain generation using <a href="#" target="_blank">3D Perlin Noise</a>,
+    <a href="#" target="_blank">3D Simplex Noise</a>,
     <a href="#" target="_blank">Diamond Square</a>, and a couple of hybrid ones.
 </div>
 
+<div id="viewport"></div>
 <div id="loading">Loading...</div>
 
 <div id="footer">
@@ -38,11 +40,12 @@
 </div>
 
 <script src="js/classes/Three.js"></script>
+<script src="js/classes/FirstPersonControls.js"></script>
 <script src="js/classes/PerlinNoise.js"></script>
 <script src="js/classes/SimplexNoise.js"></script>
 <script src="js/classes/Detector.js"></script>
 <script src="js/classes/Morphs.js"></script>
-<script src="js/classes/Textures.js"></script>
+<script src="js/classes/TextureHelper.js"></script>
 
 <script src="js/classes/RequestAnimationFrame.js"></script>
 <script src="js/classes/Stats.js"></script>

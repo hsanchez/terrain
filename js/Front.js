@@ -65,16 +65,14 @@ Front.prototype = {
 		this.scene.fog 	= new THREE.Fog( 0x050505, 2000, 4000 );
 		this.scene.fog.color.setHSV( 0.102, 0.9, 0.825 );
 
-
-		this.camera 	= new THREE.PerspectiveCamera(
-			40,
-			this.width / this.height,
-			2,
-			4000
-		);
+		this.fov 	= 50;
+		this.aspect = window.innerWidth/window.innerHeight;
+		this.near 	= 1;
+		this.far 	= 100000;
+		this.camera = new THREE.PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
 
 		this.scene.add( this.camera );
-		this.camera.position.set( -1200, 800, 1200 );
+		this.camera.position.set( -714, 140, 10 );
 
 		// CONTROLLER Setup
 		this.controls 	= this._newController(this.camera);
@@ -268,9 +266,7 @@ Front.prototype = {
 	},
 
 	_newController: function(camera) {
-		var controls = new THREE.FirstPersonControls( camera );
-		controls.movementSpeed 	= 70;
-		controls.lookSpeed 		= 0.05;
+		var controls = new THREE.FirstPersonNavigationControls( camera );
 		return controls;
 	},
 
@@ -289,11 +285,12 @@ Front.prototype = {
 	 * @param worldDepth world's height
 	 */
 	rise: function(worldWidth, worldDepth) {
-		switch(Math.floor(Math.random() * 4)){
+		switch(Math.floor(Math.random() * 5)){
 			case 0: return HeightMap.perlinNoise(worldWidth, worldDepth);
 			case 1: return HeightMap.diamondSquare(worldWidth, worldDepth);
 			case 2: return HeightMap.multiDiamondSquare(worldWidth, worldDepth);
 			case 3: return HeightMap.perlinDiamond(worldWidth, worldDepth);
+			case 4: return HeightMap.simplex(worldWidth, worldDepth);
 		}
 	},
 
@@ -304,7 +301,7 @@ Front.prototype = {
 	 * @param height world's height
 	 */
 	skin: function(data, width, height) {
-		return new Textures(data, width, height, document).generate();
+		return new TextureHelper(data, width, height, document).generate();
 	},
 
 	start: function() {
