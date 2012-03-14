@@ -136,17 +136,43 @@ PerlinNoise.prototype = {
 
 	},
 
-	marble: function(x, y, z, w) {
-		return 0.1 * this.stripes(x + 2 * this.turbulence(x, y, z, 1, w), 1.6);
+	marble: function(x, y, z) {
+		return Math.cos(x + this.noise(x, y, z));
 	},
 
 	crinkled: function(x, y, z, w) {
-		return 5 * this.turbulence(x, y, z, 1, w) * this.marble(x, y, z, w);
+		return 5 * this.turbulence(x, y, z, 1, w) * this.marble(x, y, z);
 	},
 
-	stripes: function(x, f) {
-		var t = 0.5 + 0.5 * Math.sin(f * 2 * Math.PI * x);
+	blotchy: function(x, y, z) {
+		return this.noise(
+			this.stripes(x + 2 * this.turbulence(x, y, z, 1),
+				1.6
+			),
+			this.crinkled(x, y, z),
+			z
+		);
+	},
+
+	unknown: function (x, y, z) {
+		return this.bumps(x, this.grain(x, y, z), this.blotchy(x, y, z));
+	},
+
+	grain: function(x, y, z) {
+		var g = this.noise(x, y, z) * 20;
+		var t = 0.5 + g * Math.sin(1.6 * 2 * Math.PI * x);
+		return g - t;
+	},
+
+	stripes: function(x, y, z) {
+		var t = 0.5 + 0.5 * Math.sin((y*z) * 2 * Math.PI * x);
 		return t * t - 0.5;
+	},
+
+	bumps: function(x, y, z) {
+		var t    = 0.5;
+		var bump = this.noise(x * 50, y * 50, z * 20);
+		return bump < .5 ? 0 : t;
 	},
 
 	turbulence: function(x, y, z, f, w/*w image width in pixels*/) {
