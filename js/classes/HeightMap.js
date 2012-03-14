@@ -30,7 +30,7 @@ HeightMap = {
 		return data;
 	},
 	
-	simplex: function(width, depth) {
+	simplex: function(worldWidth, worldDepth) {
 		var data 	= new Array();
 		var simplex = new SimplexNoise();
 		var quality = 1;
