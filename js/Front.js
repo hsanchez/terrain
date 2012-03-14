@@ -111,17 +111,27 @@ Front.prototype = {
 			}
 		}
 
-		// this.texture = new THREE.Texture(
-			// this.skin( this.data, this.worldWidth, this.worldDepth ),
-			// new THREE.UVMapping(),
-			// THREE.ClampToEdgeWrapping,
-			// THREE.ClampToEdgeWrapping
-		// );
-// 
-		// this.texture.needsUpdate = true;
+		this.texture = new THREE.Texture(
+			this.skin( this.data, this.worldWidth, this.worldDepth ),
+			new THREE.UVMapping(),
+			THREE.ClampToEdgeWrapping,
+			THREE.ClampToEdgeWrapping
+		);
+
+		this.texture.needsUpdate = true;
+
+		// randomingly picking textures
+		var randomTexture = [
+			this.texture,
+			THREE.ImageUtils.loadTexture('textures/grass.jpg'),
+			THREE.ImageUtils.loadTexture('textures/sand.jpg'),
+			THREE.ImageUtils.loadTexture('textures/rock.jpg')
+		];
+
+		var picked = randomTexture[Math.floor(Math.random() * 4)];
 
 		this.mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({
-				map: THREE.ImageUtils.loadTexture('textures/grass.jpg')}));
+				map: picked}));
 		this.mesh.rotation.x = - 90 * Math.PI / 180;
 		this.scene.add( this.mesh );
 
@@ -221,9 +231,7 @@ Front.prototype = {
 			switch( event.keyCode ) {
 
 				case 78: /*N*/  self.incrementLightDirection(); break;
-				case 77: /*M*/  self.incrementAnimationDeltaDirection(); break;
-				case 66: /*B*/  break;
-
+				case 71: /*G*/  location.reload(true); break;
 			}
 		};
 
@@ -234,10 +242,6 @@ Front.prototype = {
 
 	incrementLightDirection: function() {
 		this.lightDir *= -1;
-	},
-
-	incrementAnimationDeltaDirection: function() {
-		this.animDeltaDir *= -1;
 	},
 
 	_newStats: function(container) {
@@ -265,9 +269,8 @@ Front.prototype = {
 
 	_newController: function(camera) {
 		var controls = new THREE.FirstPersonControls( camera );
-		controls.movementSpeed = 10;
-		controls.lookSpeed = 0.1;
-
+		controls.movementSpeed 	= 70;
+		controls.lookSpeed 		= 0.05;
 		return controls;
 	},
 
@@ -285,7 +288,14 @@ Front.prototype = {
 	 * @param worldWidth world's width
 	 * @param worldDepth world's height
 	 */
-	rise: HeightMap.perlinDiamond,
+	rise: function(worldWidth, worldDepth) {
+		switch(Math.floor(Math.random() * 4)){
+			case 0: return HeightMap.perlinNoise(worldWidth, worldDepth);
+			case 1: return HeightMap.diamondSquare(worldWidth, worldDepth);
+			case 2: return HeightMap.multiDiamondSquare(worldWidth, worldDepth);
+			case 3: return HeightMap.perlinDiamond(worldWidth, worldDepth);
+		}
+	},
 
 	/**
 	 * It generates a texture for the world.
