@@ -6,13 +6,13 @@
  * Author(s): Huascar A. Sanchez
  * Date: 3/11/12 - 10:52 PM
  */
-var Front = function(worldWidth, worldDepth) {
+var Terrain = function(worldWidth, worldDepth) {
 	var ww = (worldWidth === undefined) ? WORLD_WIDTH : worldWidth;
 	var wd = (worldDepth === undefined) ? WORLD_DEPTH : worldDepth;
 	this.init(SCREEN_WIDTH, SCREEN_HEIGHT, ww, wd);
 };
 
-Front.prototype = {
+Terrain.prototype = {
 
 	/**
 	 * starts the terrain generation application.

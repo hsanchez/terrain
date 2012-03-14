@@ -3,7 +3,7 @@
  * @author Zhongpeng Lin
  */
 
-HeightMap = {
+var Algorithms = {
 	perlinNoise: function(worldWidth, worldDepth) {
 		var data 	= new Array();
 		var perlin 	= new PerlinNoise();
