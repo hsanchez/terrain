@@ -3,7 +3,7 @@
  * @author Zhongpeng Lin
  */
 
-HeightMap = {
+var Algorithms = {
 	perlinNoise: function(worldWidth, worldDepth) {
 		var data 	= new Array();
 		var perlin 	= new PerlinNoise();
@@ -80,7 +80,7 @@ HeightMap = {
 	},
 
 	perlinDiamond: function(width, depth) {
-		var terrain = HeightMap.perlinNoise(width, depth);
+		var terrain = Algorithms.perlinNoise(width, depth);
 		var ds = new DiamondSquare(width > depth ? width : depth, 200);
 		var data = ds.start();
 		for(var i = 0; i < width; i++) {
