@@ -1,3 +1,13 @@
 \subsection{Terrain Generation Algorithms}
+Terrain generation is essentially to generate a height for each point in 2D space. It can be seen as using a function to map \textit{x} and \textit{y} coordinates into \textit{z} coordinates: \[z=terrainGen(x, y)\]
 
+In this project, we implemented three terrain generation algorithms, namely, Perlin Noise, Simplex Noise and Diamond Square. This section gives an overview of the three algorithms.
+
+\subsubsection{Perlin Noise}
+Perlin noise is procedurally generated noise proposed by Ken Perlin \cite{Perlin2002}. In 2D space, Perlin noise works as follows:
+\begin{enumerate}
+	\item Create a grid of vectors, whose \textit{x} and \textit{y} coordinates are all integers. Every point in the 2D space falls into a square in the grid, where four vertexes of the square can be decided by taking the floors and ceilings of its \textit{x} and \textit{y} coordinates. 
+\end{enumerate}
+\subsubsection{Simplex Noise}
+\subsubsection{Diamond Square}
 % subsection algorithms (end)
