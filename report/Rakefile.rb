@@ -73,8 +73,58 @@
 #   3. pdflatex
 #   4. pdflatex
 #
-#  TODO(Huascar) describe the scenarios where images are included...
 #
+#  4. Single document, with figures
+#  The syntax of the rakefile becomes slightly more complex if there are figures in the source document.
+#  However, it's not as bad as it could be, since we have the full power of the Ruby language at our 
+#  disposal. Let's assume that the mydoc example from above now contains two OmniGraffle figures:
+#
+#   mydoc/
+#     Rakefile.rb
+#     mydoc.tex
+#     figure1.graffle
+#     figure2.graffle
+#  The rakefile should now look like this:
+#     require 'rake-latex'
+#     Rake.startfile(__FILE__)
+#       figures = []
+#       figures << graffle('figure1')
+#       figures << graffle('figure2')
+#       latex('mydoc') do
+#           |task|
+#           task.figures = figures
+#       end
+#     Rake.endfile
+# 5. Single document in multiple files
+#   SEE HOW I DID THIS BELOW ;-)
+# 
+# 6. Multiple documents in multiple directories
+# If you have a truly large number of LaTeX documents to keep track of, you will usually have come up with 
+# a fairly complicated directory structure for storing them all. For instance,
+#
+#   mydocs/
+#       Rakefile.rb
+#       refs/
+#           refs.bib
+#       papers/
+#           paper1/
+#               Rakefile.rb
+#               paper1.tex
+#           paper2/
+#               paper2.tex
+#               Rakefile.rb
+#
+#  **Note** each subdirectory must contain a Rakefile.rb. These rakefiles are written exactly like one of 
+#  the previous examples, taking into account only the document in its directory. The root directory 
+#  contains an additional rakefile that brings them all together:
+#
+#   require 'rake-latex'
+#   Rake.startfile(__FILE__)
+#       require 'papers/paper1/Rakefile'
+#       require 'papers/paper2/Rakefile'
+#   Rake.endfile
+#
+# And that's it!!! 
 #
 
 require 'rake-latex'
