@@ -4,7 +4,7 @@ Terrain generation is essentially to generate a height for each point in 2D spac
 In this project, we implemented three terrain generation algorithms, namely, Perlin Noise, Simplex Noise and Diamond Square. This section gives an overview of the three algorithms.
 
 \subsubsection{Perlin Noise}
-Perlin noise is procedurally generated noise proposed by Ken Perlin \cite{perlin:2002}. In 2D space, Perlin noise works as follows:
+Perlin noise is procedurally generated noise proposed by Ken Perlin \cite{perlin:2002}. In 2D space, Perlin Noise works as follows:
 \begin{enumerate}
 	\item Create a grid of vectors, whose \textit{x} and \textit{y} coordinates are all integers. Every point in the 2D space falls into a square in the grid, where four vertexes of the square can be decided by taking the floors and ceilings of its \textit{x} and \textit{y} coordinates.
 	\item For each vector on the grid, generate a gradient pointing away from it in a random direction (Figure~\ref{fig:randomGradients}).
@@ -13,20 +13,20 @@ Perlin noise is procedurally generated noise proposed by Ken Perlin \cite{perlin
 \end{enumerate}
 \begin{figure}
 	\center
-	\includegraphics[scale=0.5]{gradients.png}
+	\includegraphics[scale=0.5]{images/gradients.png}
 	\caption{Random Gradients}
 	\label{fig:randomGradients}
 \end{figure}
 \begin{figure}
 	\center
 	\subfigure{
-		\includegraphics[scale=0.5]{woodgrain.png}
+		\includegraphics[scale=0.5]{images/woodgrain.png}
 	}
 	\subfigure{
-		\includegraphics[scale=0.5]{marble.png}
+		\includegraphics[scale=0.5]{images/marble.png}
 	}
 	\subfigure{
-		\includegraphics[scale=0.5]{clouds.png}
+		\includegraphics[scale=0.5]{images/clouds.png}
 	}
 	\caption{Perlin Noise Examples}
 	\label{fig:perlinEg}
@@ -48,7 +48,7 @@ Diamond-square algorithm is another method to generate height map of a terrain. 
 The iteration can repeat until all points in the grid have heights (Figure~\ref{fig:dsa}).
 \begin{figure}
 	\center
-	\includegraphics[scale=0.5]{dsa.png}
+	\includegraphics[scale=0.5]{images/dsa.png}
 	\caption{Diamond-square Algorithm}
 	\label{fig:dsa}
 \end{figure}
@@ -61,4 +61,5 @@ Since all of the three algorithms accept \textit{x} and \textit{y} coordinates, 
 \end{enumerate}
 
 By combining the algorithms, we are able to produce more different terrains than single algorithms.
+
 % subsection algorithms (end)
