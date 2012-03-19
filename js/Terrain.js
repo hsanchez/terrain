@@ -109,24 +109,8 @@ Terrain.prototype = {
 			}
 		}
 
-		this.texture = new THREE.Texture(
-			this.skin( this.data, this.worldWidth, this.worldDepth ),
-			new THREE.UVMapping(),
-			THREE.ClampToEdgeWrapping,
-			THREE.ClampToEdgeWrapping
-		);
 
-		this.texture.needsUpdate = true;
-
-		// randomingly picking textures
-		var randomTexture = [
-			this.texture,
-			THREE.ImageUtils.loadTexture('textures/grass.jpg'),
-			THREE.ImageUtils.loadTexture('textures/sand.jpg'),
-			THREE.ImageUtils.loadTexture('textures/rock.jpg')
-		];
-
-		var picked = randomTexture[Math.floor(Math.random() * 4)];
+		var picked = this.pickTexture();
 
 		this.mesh = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({
 				map: picked}));
@@ -279,6 +263,28 @@ Terrain.prototype = {
 		this.camera.updateProjectionMatrix();
 	},
 
+    pickTexture: function() {
+        this.texture = this.texture || new THREE.Texture(
+            this.skin( this.data, this.worldWidth, this.worldDepth ),
+            new THREE.UVMapping(),
+            THREE.ClampToEdgeWrapping,
+            THREE.ClampToEdgeWrapping
+        );
+
+        this.texture.needsUpdate = true;
+
+        // randomingly picking textures
+        this.randomTexture = this.randomTexture || [
+            this.texture,
+            THREE.ImageUtils.loadTexture('textures/grass.jpg'),
+            THREE.ImageUtils.loadTexture('textures/sand.jpg'),
+            THREE.ImageUtils.loadTexture('textures/rock.jpg')
+        ];
+        var ran = Math.floor(Math.random() * 4 );
+        console.log('Texture ' + ran + ' got picked!');
+        return this.randomTexture[ran];
+    },
+
 	/**
 	 * It generates height of the world.
 	 *
@@ -286,7 +292,10 @@ Terrain.prototype = {
 	 * @param worldDepth world's height
 	 */
 	rise: function(worldWidth, worldDepth) {
-		switch(Math.floor(Math.random() * 4)){
+	    var ran = Math.floor(Math.random() * 4); 
+	    return Algorithms.perlinDiamond(worldWidth, worldDepth);
+        console.log('Algorithm ' + ran + ' got picked!');
+		switch(ran){
 			case 0: return Algorithms.perlinNoise(worldWidth, worldDepth);
 			case 1: return Algorithms.diamondSquare(worldWidth, worldDepth);
 			case 2: return Algorithms.perlinDiamond(worldWidth, worldDepth);

@@ -22,7 +22,7 @@ var Algorithms = {
 		for ( j = 0; j < 4; j ++ ) {
 			for(var x = 0; x < worldWidth; x++){
 				for(var y = 0; y < worldDepth; y++){
-					data[x][y] += Math.abs( perlin.unknown( x / quality, y / quality, z ) * quality * 1.75 );
+					data[x][y] += Math.abs( perlin.noise( x / quality, y / quality, z ) * quality * 1.75 );
 				}
 			}
 			quality *= 5;
