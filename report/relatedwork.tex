@@ -1,16 +1,16 @@
 \section{Related Work} 
 \label{sec:related_work}
 
-There has been a large amount of research in the area of terrain generation. Traditionally most of it has focused on generating terrain by using fractal techniques, like Olsen's \cite{lechner:2006}, Szeliski and Terzopoulos's \cite{szeliski:1989}, and Pi's \cite{pi:2006}.
+There has been a large amount of research in the area of procedural terrain generation. Traditionally most of it has focused on generating terrains by using fractal techniques, like Olsen's \cite{lechner:2006}, Szeliski and Terzopoulos's \cite{szeliski:1989}, and Pi's \cite{pi:2006}.
 
-Olsen \cite{lechner:2006} discussed the use fractal Brownian motion and perturbed Voronoi diagrams in erosion algorithms. Szeliski and Terzopoulos's \cite{szeliski:1989} used real digital elevation data which they perturb using splines to address fractal terrain generation. Pi \cite{pi:2006} created fractal landscapes using Perlin noise. As with most fractal-based approaches, their algorithms do not appear to be controllable.
+Olsen \cite{lechner:2006} discussed the use of fractal Brownian motion and perturbed Voronoi diagrams in erosion algorithms. Szeliski and Terzopoulos's \cite{szeliski:1989} used real digital elevation data, which they perturbed using splines to address fractal terrain generation. Pi \cite{pi:2006} created fractal landscapes using the Perlin noise algorithm. As with most fractal-based approaches, their algorithms did not appear to be controllable.
 
-Li, Wang, Zhou, Tang, Yang \cite{li:2006} used machine learning to model example height maps. These models were then used by the authors to come up with new interesting terrains. Unfortunately, no good deed goes unpunished. A major issue with this approach was a frequent unclearness of what needed to be learned or what features were important to be part of the training data.
+Li, Wang, Zhou, Tang, Yang \cite{li:2006} used machine learning to model example height maps. These models were then used to come up with new interesting terrains. Unfortunately, there was a major issue with this approach. There was a frequent unclearness of what needed to be learned or what features were important to be part of the training data.
 
-Ong \cite{ong:2005} used genetic algorithms to generate terrains. Besides focusing on controllability, their approach sketched the boundary of the terrain to be generated. The main form of controllability of this approach was a database containing a set of representative height map samples, which could be controlled by the designer.
+Ong \cite{ong:2005} used genetic algorithms to generate terrains. Besides focusing on controllability, Ong's approach sketched the boundary of the terrain to be generated. The main form of controllability of this approach was a database containing a set of representative height map samples that could be controlled by the designer.
   
-Lastly, Doran and Parberry \cite{doran:2010} focused on allowing the designer more natural control over the generated terrains without sacrificing too much desirable Procedural Content Generation attributes, such as novelty, structure, interest, and speed.
+Lastly, Doran and Parberry \cite{doran:2010} focused on allowing the designers to have a more natural control over the generated terrains without sacrificing the desirable Procedural Content Generation attributes to some extent, such as novelty, structure, interest, and speed.
 
-The aim of this paper is to provide a method that combines three well-known terrain generation algorithms (i.e., Perlin Noise  \cite{perlin:2002}, Simplex Noise \cite{perlin:2001}, and Diamond Square \cite{fournier:1982}) and a Javascript 3D engine, called Three.js \cite{threeJS}, for generating natural looking terrains on the Web.
+The aim of this paper is to describe a system that combines three well-known terrain generation algorithms (i.e., Perlin Noise  \cite{perlin:2002}, Simplex Noise \cite{perlin:2001}, Diamond Square \cite{fournier:1982}), and a JavaScript 3D engine, called Three.js \cite{threeJS}, for generating natural looking terrains on the Web.
 
 % section related_work (end)

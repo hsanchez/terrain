@@ -141,7 +141,7 @@ latex('report') do
         'system.tex',
         'conclusions.tex',
         'futurework.tex',
-        'problemdescription.tex',
+        'systemdescription.tex',
         'algorithms.tex',
         'architecture.tex',
         'demo.tex',

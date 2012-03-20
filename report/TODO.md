@@ -11,9 +11,6 @@
 	* replace one of the two "consequently" to "as a result"
 - last paragraph: "as well as" the specific choices we made...
 
-## Related Work
-- Third paragraph: "no good deed goes unpunished"?
-
 ## System Overview
 ### System Description
 - "it randomly **pick the** algorithm that will set the world"
