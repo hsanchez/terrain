@@ -1,3 +1,6 @@
 \subsection{Problem Description}
-In this project, we want to produce 3D terrain on web browsers. The system needs to provide a first-person experience for users to walk on or fly over different terrain styles, which are generated randomly, with different shapes and textures. The terrain generation should not require users to install additional browser plugins and the generation calculation is done in browsers. The systems should respond to users navigation operations (mouse dragging, key pressing) quickly.
+Our Web-based terrain generator performs terrain generation in two steps and allows users to have a full first-person experience of a realistic, interactive virtual environment in the third step. First, it randomly pick the algorithm that will set the world. Subsequently, it randomly pick a texture generation strategy, i.e., procedurally generated texture, and loading an existing texture from disk. After the world has been set, our terrain generator tool applies a few visual effects (e.g., fog) and animations on objects part of the generated world to create a sense of immersion for users interacting with our tool. Some of the navigation operations that users have at their disposal when interacting with our generated terrains include: rotating the world, moving forward, moving backwards, and moving left/right.  
+
+Each of the three steps described above is pictured as a component (s) of the architecture diagram shown in Figure~\ref{fig:arch} and is described in detail in the following paragraphs.
+
 % subsection problem description (end)
