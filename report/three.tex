@@ -1,22 +1,37 @@
 \subsection{WebGL and Three.js}
-In order to render 3D objects on browsers without any plug-in, browser support is indispensable. The \texttt{canvas} element in HTML 5 introduces high performance dynamic scriptable shape rendering capability to browsers \cite{wiki:canvas}, and the \textit{WebGL} context of \texttt{canvas} element further exposes 3D graphic API, which provides JavaScript the access to the computation power of GPU, making the 3D animation fast without the use of plug-ins \cite{wiki:webgl}. WebGL has been supported by most major browsers including Mozilla Firefox, Google Chrome, Safari and Opera.
 
-However, programming with shaders to access the WebGL 3D graphic API to not an easy task. Even for simple object rendering, one needs to manually set all vertex position, construct model-view matrix and projection matrix, so as to transform the object from its local coordinate space into world space using model-view matrix, and then from world space to camera space using project matrix \cite{Lengyel2012}. When textures and lighting are involved, the task becomes even more complicated. Examples of programming WebGL shaders can be found in \textit{Learning WebGL} \cite{learningWebGL}.
+With the introduction of HTML5, experimentation with the new  \texttt{canvas} began. The \texttt{canvas} tag introduces a high performance dynamic scriptable shape rendering capability, which is very useful if doing high-quality 3D graphics or performing super fast animations on the Web without the use of plug-ins \cite{wiki:webgl}. Consequently, large number of projects being built on top of this tag started appearing. One of these projects is the 3D Javascript engine, developed by Ricardo Cabello (a.k.a., MrDoob), called Three.js.  
 
-To ease the development process, several WebGL frameworks were developed, such as Three.js\footnote{https://github.com/mrdoob/three.js/}, PhiloGL\footnote{http://www.senchalabs.org/philogl/}, GLGE\footnote{http://www.glge.org/}, SceneJS\footnote{http://scenejs.org/} and C3DL\footnote{http://www.c3dl.org/}, to name some famous ones. Among these frameworks, Three.js has the most ``watchers" on Github, an indicator of popularity, to the date of writing. In addition, it provides a large number of examples to start with and has an active community. As the result, it is the WebGL framework of choice in this project.
+Three.js engine’s functionality provide you with an out-of-the-box WebGL renderer (\texttt{canvas}, \texttt{svg} and WebGL), and controllable camera and viewport. The physics and animation work is up to the developer to work out. Nevertheless it is not complicated to add up these functionality to Three.js as it is shown in many Three.js examples found online at \cite{threeJS}. Figure~\ref{fig:threejs} illustrates an example of a cube rendered by Three.js.
 
-Three.js provides two types of renderers to render 3D scene: \texttt{CanvasRenderer} and \texttt{WebGLRenderer}. \texttt{CanvasRenderer} uses 2D context of \texttt{canvas} to render 3D scene when WebGL context is not supported, e.g. in Internet Explorer, while \texttt{WebGLRenderer} takes the advantage of the full power of GPU to render the scene, and thus making it faster in theory. As we use WebGL in this project, we need to create an instance of \texttt{WebGLRenderer} at the very beginning:
+\begin{figure}
+	\center
+	\includegraphics[scale=0.45]{images/basicsThreeJS.png}
+	\caption{Three.js Example}
+	\label{fig:threejs}
+\end{figure}
+
+
+Great examples have been created by MrDoob and by Three.js' contributors and the code is freely available. The code is relatively easy to follow and understand by even inexperienced Javascript developer. Hence, the code is released as Three.js' constantly growing documentation. 
+
+Google Chrome is the recommended browser for doing and testing Three.js work. It is HTML5 compatible and much slightly better than FireFox, Opera, and definitely better than IE. Additionally, Chrome’s JS engine is very fast and smooth.
+
+
+Three.js' basic set up is the following. First, since we are using WebGL in this project, we create an instance of \texttt{WebGL Renderer}:
+
 \begin{lstlisting}
 var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize(document.body.clientWidth, document.body.clientHeight);
 \end{lstlisting}
 
-The renderer element need to be appended to an HTML element, such as \texttt{div} or the document \texttt{body}. In this project, we use \texttt{body} as container:
+Then, we plug this render in as an HTML element. We use the \texttt{body} tag as our document container:
+
 \begin{lstlisting}
 document.body.appendChild(renderer.domElement);
 \end{lstlisting}
 
-We can also include a bit styling to make it pretty:
+We can also include a bit of styling to make it pretty:
+
 \begin{lstlisting}
 renderer.setClearColor( scene.fog.color, 1 );
 renderer.domElement.style.position = "absolute";
@@ -24,7 +39,8 @@ renderer.domElement.style.top = MARGIN + "px";
 renderer.domElement.style.left = "0px";
 \end{lstlisting}
 
-Then we can make a scene with fog and add a cube into it: 
+To get things better, we can create an instance of a \texttt{Scene}, add some \texttt{Fog} visual effect to it, and then add a \texttt{Cube}: 
+
 \begin{lstlisting}
 var scene = new THREE.Scene();
 scene.fog = new THREE.Fog(0x050505, 2000, 4000);
@@ -37,7 +53,8 @@ cube.rotation.x = Math.PI / 4;
 scene.add(cube);
 \end{lstlisting}
 
-We only need to specify the position and rotation of 3D objects, and add them to the scene. Three.js will performance the transformation from local space to world space automatically. Similarly, we only need to set the position and orientation of camera, the transformation from world space to camera space is left to Three.js:
+The above code could be then improved by adding a \texttt{Camera} object. This camera will allow us to see the cube from different angles. Technically, all we need to do is to create a \texttt{Camera} instance, set the position and orientation of such camera, and then voila! Now we have a basic interactive world consisting of a cube in the center of the \texttt{canvas}:
+
 \begin{lstlisting}
 //PerspectiveCamera(field-of-view, viewAspectRatio, nearest, farthest);
 var camera = new THREE.PerspectiveCamera(45, width / height, 1, 10000);
@@ -45,20 +62,12 @@ camera.position.z = 300;
 camera.lookAt(30, 40, 50);
 \end{lstlisting}
 
-Finally, the renderer render the scene from the camera:
+Finally, the \texttt{WebGL Renderer} renders the scene from the camera. At this point, a 3D cube will appeared in the center of the screen:
+
 \begin{lstlisting}
 renderer.render(scene, camera);
-\end{lstlisting}
-
-At this point, the 3D cube can be rendered on the screen. Animation is simple too, with the help of \texttt{requestAnimationFrame} function:
-\begin{lstlisting}
-function animate() {
-	requestAnimationFrame(animate);
-	render();
-}
-\end{lstlisting}
-
-\texttt{requestAnimationFrame} accepts a function to call when a repaint is needed next. By passing in the \texttt{animate} function, we make it called every time the canvas is repaint, and thus \texttt{render} function can be used to set the new position or rotation of objects, including the camera.
-
+\end{lstlisting} 
+  
+Interested readers can find more details about Three.js at \cite{threeJS}, and about WebGL at \cite{wiki:webgl}, \cite{learningWebGL}. In the next section, We will write about the algorithms we implemented in our Web-based terrain generator.
 
 % subsection three.js (end)
