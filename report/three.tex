@@ -1,6 +1,6 @@
 \subsection{Three.js}
 
-With the introduction of HTML5, experimentation with the new \texttt{canvas} began. The \texttt{canvas} tag introduces a high performance dynamic scriptable shape rendering capability, which is very useful if doing high-quality 3D graphics or performing super fast animations on the Web without the use of plug-ins \cite{wiki:webgl}. Consequently, large number of projects being built on top of this tag started appearing. One of these projects is the 3D Javascript engine, developed by Ricardo Cabello (a.k.a., MrDoob), called Three.js.  
+With the introduction of HTML5, experimentation with the new \texttt{canvas} began. The \texttt{canvas} tag introduces a high performance dynamic scriptable shape rendering capability, which is very useful if doing high-quality 3D graphics or performing super fast animations on the Web without the use of plug-ins \cite{wiki:webgl}. Consequently, large number of projects being built on top of this tag started appearing. One of these projects was the 3D Javascript engine, developed by Ricardo Cabello (a.k.a., MrDoob), called Three.js.  
 
 Three.js engine's functionality provides you with an out-of-the-box WebGL renderer, called \texttt{WebGLRenderer}, and a controllable camera and viewport components. The physics and animation work is up to the developer to work out. Nevertheless, it is not complicated to add up this functionality to Three.js as it is shown in many Three.js examples found online at \cite{threeJS}. Figure~\ref{fig:threejs} illustrates an example of a cube rendered by Three.js.
 
@@ -14,7 +14,7 @@ Three.js engine's functionality provides you with an out-of-the-box WebGL render
 
 Great examples have been created by MrDoob and by Three.js' contributors and the code is freely available. The code is relatively easy to follow and understand by even the most inexperienced Javascript developer. Hence, the code is released as Three.js' constantly growing documentation. 
 
-Google Chrome is the recommended browser for doing and testing Three.js work. It is HTML5 compatible and slightly better than FireFox, Opera, and definitely better than IE. Additionally, Chrome’s JS engine is very fast and smooth.
+Google Chrome is the recommended browser for doing and testing Three.js work. It is HTML5 compatible and slightly better than FireFox, Opera, and definitely better than IE. Additionally, Chrome's JS engine is very fast and smooth.
 
 
 Three.js' basic set up is the following. First, since we are using WebGL in this project, we create an instance of \texttt{WebGLRenderer}:
@@ -68,6 +68,6 @@ Finally, the \texttt{WebGLRenderer} renders the scene from the camera. At this p
 renderer.render(scene, camera);
 \end{lstlisting} 
   
-Interested readers can find more details about Three.js at \cite{threeJS}, and about WebGL at \cite{wiki:webgl}, \cite{learningWebGL}. In the next section, We will write about the algorithms we implemented in our Web-based terrain generator.
+Interested readers can find more details about Three.js at \cite{threeJS}, and about WebGL at \cite{wiki:webgl,learningWebGL}. In the next section, We will write about the algorithms we implemented in our Web-based terrain generator.
 
 % subsection three.js (end)
