@@ -1,0 +1,16 @@
+*.aux
+*.aux.bak
+*.bbl
+*.blg
+*.dvi
+*.gz
+*.fdb_latexmk
+*.log
+*.out
+*.pdf
+*.ps
+*.pyg
+*.sw*
+*.synctex.gz
+*.tdo
+.DS_Store

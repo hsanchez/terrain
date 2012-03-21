@@ -17,6 +17,7 @@ WEB-INF/
 *.o
 *.so
 Session.vim
+.DS_Store
 
 # ignore dev since each of its subdirectories is a unique git repository.
 dev/**/*

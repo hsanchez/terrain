@@ -8,14 +8,12 @@
  * var terrain = diamond.start();
  */
 
-DiamondSquare = function (width, height, segments, smoothingFactor) {
-	this.init (width, height, segments, smoothingFactor);
+var DiamondSquare = function (segments, smoothingFactor) {
+	this.init (segments, smoothingFactor);
 };
 
 DiamondSquare.prototype = {
-	init:function (width, height, segments, smoothingFactor) {
-		this.width 				= width;
-		this.height 			= height;
+	init:function (segments, smoothingFactor) {
 		this.segments 			= segments;
 		this.smoothingFactor 	= smoothingFactor;
 		this.terrain 			= new Array ();
